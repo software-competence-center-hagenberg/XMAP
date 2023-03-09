@@ -9,6 +9,10 @@ A shiny app for deriving local/global explanations of UMAP embeddings based on p
 - (D) UMAP embedding and loadings
 - (E) Discriminatory features between clusters A and B
 
+An Iris dataset example:
+
+<a href="url"><img src="images/overview_app_iris_example.png" align="center" width="1000"></a>
+
 # Installation
 The easiest way to install the X-MAP is from within the RStudio IDE. Just run server.R. We recommend running the app in a web browser.
 
@@ -24,12 +28,8 @@ data points to be compared with the points from the other clusters. Note that th
 Once both clusters are selected, the corresponding data points show up in (C) and relative Hotelling's T2 contributions indicating the feature importance of each variable for discrimination of the 
 clusters are shown in (E).
 
-An Iris dataset example:
-
-<a href="url"><img src="images/overview_app_iris_example.png" align="center" width="1000"></a>
-
 # Notes
-Be aware that this is a prototype implementation. Not all user interface components ar fully responsive and the calculations are not optimized.
+Be aware that this is a prototype implementation. Not all user interface components are fully responsive and the calculations are not optimized.
 
 # Reference
 <a id="1">[1]</a> Roman Josef Rainer, Michael Mayr, Johannes Himmelbauer, Ramin Nikzad-Langerodi (2022).

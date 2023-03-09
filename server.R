@@ -64,9 +64,9 @@ shinyServer(function(input, output, session) {
       
       pca_input_dat <-
         apply(as.matrix(subset),
-        2,
-        scale,
-        scale = F)
+              2,
+              scale,
+              scale = F)
       res_pca <-
         prcomp(pca_input_dat, center = FALSE, scale = FALSE)
       rel_sd <- cumsum(res_pca$sdev ^ 2) / sum(res_pca$sdev ^ 2)
@@ -106,7 +106,7 @@ shinyServer(function(input, output, session) {
       no_pcs <- min(max_comp, ncol(umap_data)) #res_pca$x
       q_vals <- lapply(1:no_pcs, function(pc) {
         inner <-
-          (diag(ncol(res_pca$rotation)) - res_pca$rotation[, pc] %*% t(res_pca$rotation[, pc]))
+          (diag(nrow(res_pca$rotation)) - res_pca$rotation[, pc] %*% t(res_pca$rotation[, pc]))
         qis <- do.call(c, lapply(1:nrow(res_pca$x), function(i) {
           # q_val <- res_pca$x[i,,drop=F] %*% inner %*% t(res_pca$x[i,,drop=F])
           q_val <-
@@ -157,38 +157,38 @@ shinyServer(function(input, output, session) {
   observe({
     if (input$select_points_for == "Cluster A") {
       if(!is.null(event_data("plotly_selected")) & length(event_data("plotly_selected"))>0){
-        data_basis$point_selection_A = event_data("plotly_selected") %>% select(pointNumber)
+        data_basis$point_selection_A = event_data("plotly_selected") %>% select(pointNumber) %>% mutate(pointNumber = pointNumber + 1)
       }
     } else if (input$select_points_for == "Cluster B") {
       if(!is.null(event_data("plotly_selected"))  & length(event_data("plotly_selected"))>0){
-        data_basis$point_selection_B = event_data("plotly_selected") %>% select(pointNumber)
+        data_basis$point_selection_B = event_data("plotly_selected") %>% select(pointNumber) %>% mutate(pointNumber = pointNumber + 1)
       }
     }
   })
   
   
   output$pointselectionA <- renderDataTable(data_basis$point_selection_A,extensions = "FixedHeader",
-                    style = "bootstrap4",
-                    options = list(
-                      pageLength = 3,
-                      autoWidth = TRUE,
-                      paging = TRUE,
-                      searching = F,
-                      ordering = TRUE,
-                      fixedHeader = TRUE
-                    ))
-
+                                            style = "bootstrap4",
+                                            options = list(
+                                              pageLength = 3,
+                                              autoWidth = TRUE,
+                                              paging = TRUE,
+                                              searching = F,
+                                              ordering = TRUE,
+                                              fixedHeader = TRUE
+                                            ))
+  
   output$pointselectionB <- renderDataTable(data_basis$point_selection_B,extensions = "FixedHeader",
-                    style = "bootstrap4",
-                    options = list(
-                      pageLength = 3,
-                      autoWidth = TRUE,
-                      paging = TRUE,
-                      searching = F,
-                      ordering = TRUE,
-                      fixedHeader = TRUE
-                    ))
-
+                                            style = "bootstrap4",
+                                            options = list(
+                                              pageLength = 3,
+                                              autoWidth = TRUE,
+                                              paging = TRUE,
+                                              searching = F,
+                                              ordering = TRUE,
+                                              fixedHeader = TRUE
+                                            ))
+  
   
   
   observeEvent(input$raw_data_upload, {
@@ -421,24 +421,24 @@ shinyServer(function(input, output, session) {
       
       voronoiTabs = lapply(1:nTabs, function(x) {
         tabPanel(paste0("PC", x),
-              fluidPage(
-                 fluidRow(column(
-                   6,
-                   renderPlotly(
-                     ggplotly(
-                       voronoi_plots[[x]] + theme(
-                         text = element_text(size = global_text_size),
-                         plot.title = element_text(size = global_plot_title_size)
-                       ),
-                       height = 600,
-                       #width = 700
-                     ) %>% layout(dragmode = "select")
-                   )
-                 ),
-                 column(6,
-                        renderPlotly(
-                          ggplotly(loading_plots[[x]], height=600)# height=780
-                        )))))
+                 fluidPage(
+                   fluidRow(column(
+                     6,
+                     renderPlotly(
+                       ggplotly(
+                         voronoi_plots[[x]] + theme(
+                           text = element_text(size = global_text_size),
+                           plot.title = element_text(size = global_plot_title_size)
+                         ),
+                         height = 600,
+                         #width = 700
+                       ) %>% layout(dragmode = "select")
+                     )
+                   ),
+                   column(6,
+                          renderPlotly(
+                            ggplotly(loading_plots[[x]], height=600)# height=780
+                          )))))
       })
       tictoc::toc()
       do.call(tabsetPanel, voronoiTabs)
